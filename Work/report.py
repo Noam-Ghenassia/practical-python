@@ -10,10 +10,21 @@ import csv
 
 def read_portfolio(filename: str):
     with open(filename, 'rt') as f:
-        headers = next(f).split(',')
-        rows = [tuple(row.split(',')) for row in f]
+        headers = next(f).rstrip().split(',')
+        #rows = [tuple(row.split(',')) for row in f]
         #rows = [(row[0], int(row[1]), float(row[2])) for row in rows]
-        rows = [{'name' : row[0][1:-1], 'shares' : int(row[1]), 'price' : float(row[2])} for row in rows]
+        #rows = [{'name' : row[0][1:-1], 'shares' : int(row[1]), 'price' : float(row[2])} for row in rows]
+        rows = []
+        for row_num, row in enumerate(f):
+            try:
+                rows.append(dict(zip(headers, row.rstrip().split(','))))
+            except ValueError:
+                print(f"incorrect data format at line{row_num}")
+    for row in rows:
+        print(row)
+        row['name'] = row['name'][1:-1]
+        row['shares'] = int(row['shares'])
+        row['price'] = float(row['price'])
     return (headers, rows)
 
 def portfolio_cost(filename: str) -> float:
@@ -58,7 +69,7 @@ def main():
     # else:
     #     filename = 'Data/portfolio.csv'
     
-    portfolio_filename = '/home/noam/Documents/projects/practical-python/Work/Data/portfolio.csv'
+    portfolio_filename = '/home/noam/Documents/projects/practical-python/Work/Data/missing.csv'
     prices_filename = '/home/noam/Documents/projects/practical-python/Work/Data/prices.csv'
 
     report = make_report(portfolio_filename, prices_filename)
