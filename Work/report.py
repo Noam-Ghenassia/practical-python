@@ -14,11 +14,11 @@ def read_portfolio(filename: str):
         rows = []
         for row_num, row in enumerate(f):
             if "" in row.rstrip().split(',') or '' in row.rstrip().split(','):
-                print(f"incorrect data format in file {filename} at line {row_num}")
+                print(f"missing data in file {filename} at line {row_num}")
             else:
                 rows.append(dict(zip(headers, row.rstrip().split(','))))
 
-    for row_num, row in enumerate(rows):
+    for row in rows:
         row['name'] = row['name'][1:-1]
         row['shares'] = int(row['shares'])
         row['price'] = float(row['price'])
@@ -60,7 +60,8 @@ def make_report(portfolio_filename: str, prices_filename: str) -> None:
 def print_report(portfolio_filename: str, prices_filename: str) -> None:
     report = make_report(portfolio_filename, prices_filename)
     headers = ('Name', 'Shares', 'Price', 'Change')
-    headers_line = reduce(lambda a, b: a+f"{b:>10s}", list(headers), " ")
+    #headers_line = reduce(lambda a, b: a+f"{b:>10s}", list(headers), " ")
+    headers_line = '%10s %10s %10s %10s'  % headers
     print(headers_line)
     print("-"*len(headers_line))
     for name, shares, price, change in report:
