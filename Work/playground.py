@@ -1,5 +1,2 @@
-from functools import reduce
-
-a = ["vb", "ac", "q"]
-b = reduce(lambda a, b: a+b, a)
-print(b)
+a = tuple(x for x in [1, 2, 3])
+print(a)

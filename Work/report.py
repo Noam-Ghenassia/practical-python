@@ -7,22 +7,27 @@ from functools import reduce
 from pprint import pprint
 import csv
 
+import fileparse
+
+
+# def read_portfolio(filename: str):
+#     with open(filename, 'rt') as f:
+#         headers = next(f).rstrip().split(',')
+#         rows = []
+#         for row_num, row in enumerate(f):
+#             if "" in row.rstrip().split(',') or '' in row.rstrip().split(','):
+#                 print(f"missing data in file {filename} at line {row_num}")
+#             else:
+#                 rows.append(dict(zip(headers, row.rstrip().split(','))))
+
+#     for row in rows:
+#         row['name'] = row['name'][1:-1]
+#         row['shares'] = int(row['shares'])
+#         row['price'] = float(row['price'])
+#     return (headers, rows)
 
 def read_portfolio(filename: str):
-    with open(filename, 'rt') as f:
-        headers = next(f).rstrip().split(',')
-        rows = []
-        for row_num, row in enumerate(f):
-            if "" in row.rstrip().split(',') or '' in row.rstrip().split(','):
-                print(f"incorrect data format in file {filename} at line {row_num}")
-            else:
-                rows.append(dict(zip(headers, row.rstrip().split(','))))
-
-    for row_num, row in enumerate(rows):
-        row['name'] = row['name'][1:-1]
-        row['shares'] = int(row['shares'])
-        row['price'] = float(row['price'])
-    return (headers, rows)
+    return fileparse.parse_csv(filename, types=[str, int, float])
 
 def portfolio_cost(filename: str) -> float:
     _, rows = read_portfolio(filename)
@@ -60,7 +65,8 @@ def make_report(portfolio_filename: str, prices_filename: str) -> None:
 def print_report(portfolio_filename: str, prices_filename: str) -> None:
     report = make_report(portfolio_filename, prices_filename)
     headers = ('Name', 'Shares', 'Price', 'Change')
-    headers_line = reduce(lambda a, b: a+f"{b:>10s}", list(headers), " ")
+    #headers_line = reduce(lambda a, b: a+f"{b:>10s}", list(headers), " ")
+    headers_line = '%10s %10s %10s %10s'  % headers
     print(headers_line)
     print("-"*len(headers_line))
     for name, shares, price, change in report:
@@ -72,7 +78,7 @@ def main():
     # else:
     #     filename = 'Data/portfolio.csv'
     
-    portfolio_filename = '/home/noam/Documents/projects/practical-python/Work/Data/portfoliodate.csv'
+    portfolio_filename = '/home/noam/Documents/projects/practical-python/Work/Data/portfolio.csv'
     prices_filename = '/home/noam/Documents/projects/practical-python/Work/Data/prices.csv'
 
     print_report(portfolio_filename, prices_filename)
