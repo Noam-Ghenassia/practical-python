@@ -7,9 +7,9 @@ def main():
     # else:
     #     filename = 'Data/portfolio.csv'
     
-    portfolio_filename = '/home/noam/Documents/projects/practical-python/Work/Data/portfolio.csv'
+    portfolio_filename = '/home/noam/Documents/projects/practical-python/Work/Data/prices.csv'
 
-    rows = parse_csv(portfolio_filename, types=[str, int, float])
+    rows = parse_csv(portfolio_filename, types=[str, float], has_headers=False)
     pprint(rows)
 
 
