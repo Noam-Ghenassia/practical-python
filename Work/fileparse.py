@@ -44,6 +44,7 @@ def parse_csv(filename: str,
         else:
             records = []
             for row in rows:
-                records.append(tuple(t(item) for item, t in zip(row, types)))
+                if row:
+                    records.append(tuple(t(item) for item, t in zip(row, types)))
 
     return records

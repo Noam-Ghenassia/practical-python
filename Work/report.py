@@ -2,57 +2,25 @@
 #
 # Exercise 2.4
 
-# import sys
+import sys
 from functools import reduce
 from pprint import pprint
 import csv
 
 import fileparse
 
-
-# def read_portfolio(filename: str):
-#     with open(filename, 'rt') as f:
-#         headers = next(f).rstrip().split(',')
-#         rows = []
-#         for row_num, row in enumerate(f):
-#             if "" in row.rstrip().split(',') or '' in row.rstrip().split(','):
-#                 print(f"missing data in file {filename} at line {row_num}")
-#             else:
-#                 rows.append(dict(zip(headers, row.rstrip().split(','))))
-
-#     for row in rows:
-#         row['name'] = row['name'][1:-1]
-#         row['shares'] = int(row['shares'])
-#         row['price'] = float(row['price'])
-#     return (headers, rows)
-
-def read_portfolio(filename: str):
-    return fileparse.parse_csv(filename, types=[str, int, float])
-
-def portfolio_cost(filename: str) -> float:
-    _, rows = read_portfolio(filename)
-    tot = sum([row['shares'] * row['price'] for row in rows])
-    return(tot)
-
 def read_prices(filename: str) -> dict:
-    with open(filename, 'rt') as f:
-        f_ = csv.reader(f)
-        prices = {}
-        for (row_num, row) in enumerate(f_):
-            try:
-                prices[row[0]] = float(row[1])
-            except IndexError:
-                print(f'incorrect data format in file {filename} at line {row_num}')
-    return prices
+    prices = fileparse.parse_csv(filename, types=[str, float], has_headers=False)
+    return {price[0] : price[1] for price in prices}
 
 def compute_margin(portfolio_filename: str, prices_filename: str) -> float:
-    _, rows = read_portfolio(portfolio_filename)
+    rows = fileparse.parse_csv(portfolio_filename, types=[str, int, float])
     prices = read_prices(prices_filename)
     margins = [row['shares'] * (prices[row['name']] - row['price']) for row in rows]
     print(sum(margins))
 
 def make_report(portfolio_filename: str, prices_filename: str) -> None:
-    _, p_rows = read_portfolio(portfolio_filename)
+    p_rows = fileparse.parse_csv(portfolio_filename, types=[str, int, float])
     prices = read_prices(prices_filename)
     rows = []
     for p_row in p_rows:
@@ -72,18 +40,19 @@ def print_report(portfolio_filename: str, prices_filename: str) -> None:
     for name, shares, price, change in report:
         print(f'{name:>10s} {shares:>10d} {price:>10.2f} {change:>10.2f}')
 
-def main():
-    # if len(sys.argv) == 2:
-    #     filename = sys.argv[1]
-    # else:
-    #     filename = 'Data/portfolio.csv'
-    
-    portfolio_filename = '/home/noam/Documents/projects/practical-python/Work/Data/portfolio.csv'
-    prices_filename = '/home/noam/Documents/projects/practical-python/Work/Data/prices.csv'
-
+def main(args):
+    portfolio_filename = args[0]
+    prices_filename = args[1]
     print_report(portfolio_filename, prices_filename)
 
 
 
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) == 3:
+        portfolio_filename = sys.args[1]
+        prices_filename = sys.args[2]
+    else:
+        portfolio_filename = '/home/noam/Documents/projects/practical-python/Work/Data/portfolio.csv'
+        prices_filename = '/home/noam/Documents/projects/practical-python/Work/Data/prices.csv'
+
+    main([portfolio_filename, prices_filename])

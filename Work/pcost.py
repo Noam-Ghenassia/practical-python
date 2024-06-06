@@ -3,29 +3,11 @@
 # Exercise 1.27
 import csv
 import sys
-
-"""def extract(filename):
-    with open(filename, 'rt') as f:
-        headers = next(f).split(',')
-        rows = [row.split(',') for row in f]
-    return (headers, rows)"""
-
-def extract(filename):
-    with open(filename, 'rt') as f:
-        r = csv.reader(f)
-        headers = next(r)
-        rows = list(r)
-    return (headers, rows)
+import fileparse
 
 def portfolio_cost(filename):
-    _, rows = extract(filename)
-    #tot = sum([int(row[1]) * float(row[2]) for row in rows])
-    tot=0
-    for row in rows :
-        try:
-            tot += int(row[1]) * float(row[2])
-        except ValueError:
-            print('missing data')
+    rows = fileparse.parse_csv(filename, types=[str, int, float])
+    tot = sum([row['shares'] * row['price'] for row in rows])
     print(tot)
 
 def main():
