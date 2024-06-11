@@ -5,11 +5,11 @@
 import sys
 from functools import reduce
 from pprint import pprint
-import csv
 
 import fileparse
-import stock
 import tableformat
+from portfolio import Portfolio
+from stock import Stock
 
 def read_prices(filename: str) -> dict:
     prices = fileparse.parse_csv(filename, types=[str, float], has_headers=False)
@@ -17,7 +17,9 @@ def read_prices(filename: str) -> dict:
 
 def read_portfolio(filename: str) -> list:
     rows = fileparse.parse_csv(filename, types=[str, int, float])
-    return [stock.Stock(row['name'], row['shares'], row['price']) for row in rows]
+    #return [stock.Stock(row['name'], row['shares'], row['price']) for row in rows]
+    portfolio = [ Stock(d['name'], d['shares'], d['price']) for d in rows ]
+    return Portfolio(portfolio)
 
 def compute_margin(portfolio_filename: str, prices_filename: str) -> float:
     rows = fileparse.parse_csv(portfolio_filename, types=[str, int, float])
@@ -35,16 +37,6 @@ def make_report(portfolio_filename: str, prices_filename: str) -> None:
         change = price - stock.price
         rows.append((name, shares, price, change))
     return rows
-
-# def print_report(portfolio_filename: str, prices_filename: str, formatter: TableFormatter) -> None:
-#     report = make_report(portfolio_filename, prices_filename)
-#     headers = ('Name', 'Shares', 'Price', 'Change')
-#     #headers_line = reduce(lambda a, b: a+f"{b:>10s}", list(headers), " ")
-#     headers_line = '%10s %10s %10s %10s'  % headers
-#     print(headers_line)
-#     print("-"*len(headers_line))
-#     for name, shares, price, change in report:
-#         print(f'{name:>10s} {shares:>10d} {price:>10.2f} {change:>10.2f}')
 
 def print_report(portfolio_filename: str, prices_filename: str, formatter: tableformat.TableFormatter) -> None:
     report = make_report(portfolio_filename, prices_filename)
