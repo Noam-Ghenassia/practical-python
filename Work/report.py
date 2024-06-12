@@ -3,7 +3,6 @@
 # Exercise 2.4
 
 import sys
-from functools import reduce
 from pprint import pprint
 
 import fileparse
