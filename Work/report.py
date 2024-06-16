@@ -48,8 +48,7 @@ def print_report(portfolio_filename: str, prices_filename: str, formatter: table
 
 
 def main(args, fmt='txt'):
-    portfolio_filename = args[0]
-    prices_filename = args[1]
+    portfolio_filename, prices_filename = args
     formatter = tableformat.read_formatter(fmt)
     print_report(portfolio_filename, prices_filename, formatter)
 

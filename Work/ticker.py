@@ -2,6 +2,7 @@ import csv
 
 from follow import follow
 import report
+import tableformat
 
 def select_columns(rows, indices):
     for row in rows:
@@ -27,18 +28,19 @@ def parse_stock_data(lines):
     rows = make_dicts(rows, ['name', 'price', 'change'])
     return rows
 
+def ticker(portfile, logfile, fmt):
+    portfolio = report.read_portfolio(portfile)
+    rows = parse_stock_data(follow(logfile))
+    # rows = filter_symbols(rows, portfolio)
+    rows = (row for row in rows if row['name'] in portfolio)
+    formatter = tableformat.read_formatter(fmt)
+    formatter.headings(['name', 'price', 'change'])
+    for row in rows:
+        formatter.row(row.values())
+
 
 def main():
-    portfolio = report.read_portfolio('Data/portfolio.csv')
-    rows = parse_stock_data(follow('Data/stocklog.csv'))
-    rows = filter_symbols(rows, portfolio)
-    for row in rows:
-        print(row)
-
-    # lines = follow('Data/stocklog.csv')
-    # rows = parse_stock_data(lines)
-    # for row in rows:
-    #     print(row)
+    ticker('Data/portfolio.csv', 'Data/stocklog.csv', fmt='txt')
 
 if __name__ == '__main__':
     main()

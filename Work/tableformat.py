@@ -49,7 +49,6 @@ def read_formatter(format: str) -> TableFormatter:
 
     if format in formatters:
         return formatters[format]
-    # print(f"Unknown format : {format}.")
     raise FormatError(f"Unknown format : {format}.")
 
 def print_table(rows: Iterable, col_names: List[str], formatter: TableFormatter):
