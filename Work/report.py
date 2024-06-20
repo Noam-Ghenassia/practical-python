@@ -16,8 +16,7 @@ def read_prices(filename: str) -> dict:
 
 def read_portfolio(filename: str) -> list:
     rows = fileparse.parse_csv(filename, types=[str, int, float])
-    #return [stock.Stock(row['name'], row['shares'], row['price']) for row in rows]
-    portfolio = [ Stock(d['name'], d['shares'], d['price']) for d in rows ]
+    portfolio = [ Stock(**d) for d in rows ]
     return Portfolio(portfolio)
 
 def compute_margin(portfolio_filename: str, prices_filename: str) -> float:

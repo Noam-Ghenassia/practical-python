@@ -3,10 +3,11 @@
 class Stock:
 
     __slots__ = ('name','_shares','price')
-    def __init__(self, name, shares, price):
-        self.name = name
-        self.shares = shares
-        self.price = price
+
+    def __init__(self, **kwargs):
+        self.name = kwargs['name']
+        self.shares = kwargs['shares']
+        self.price = kwargs['price']
 
     @property
     def shares(self):

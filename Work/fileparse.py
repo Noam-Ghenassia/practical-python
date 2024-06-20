@@ -2,7 +2,6 @@
 #
 # Exercise 3.3
 from collections.abc import Iterable
-
 import csv
 
 def parse_lines(lines: Iterable,
@@ -42,7 +41,6 @@ def parse_lines(lines: Iterable,
         records = []
         for row in lines:
             if row:
-                # print(tuple(t(item) for item, t in zip(row, types)))
                 records.append(tuple(t(item) for item, t in zip(row, types)))
 
     return records
@@ -54,7 +52,7 @@ def parse_csv(filename: str,
               delimiter=',',
               silence_errors=False) -> list:
     
-    if select and has_headers:
+    if select and not has_headers:
         raise RuntimeError("select argument requires column headers")
 
     with open(filename) as f:
